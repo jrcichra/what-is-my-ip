@@ -6,3 +6,6 @@ workers_dev = true
 route = ""
 zone_id = ""
 compatibility_date = "2021-11-01"
+kv_namespaces = [
+    {binding = "what_is_my_ip", id = "a10e6050e7f54f6ca058f53fb47c0503", preview_id = "82aff34c4fe04cfb84b5a22ad67f5492"}
+]
