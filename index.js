@@ -39,16 +39,30 @@ async function readCache(ip) {
 async function handleRequest(request) {
   //get the ip address of the request
   const ip = request.headers.get('cf-connecting-ip');
+  //json
+  if (request.url.includes('/json')) {
+    const data = await getISP(ip)
+    return new Response(`${JSON.stringify(data)}\n`, {
+      headers: { 'content-type': 'application/json' },
+    })
+  }
+  //both ip and isp
+  if (request.url.includes('/ip_and_isp')) {
+    const data = await getISP(ip)
+    return new Response(`${ip} - ${data.isp}\n`, {
+      headers: { 'content-type': 'text/plain' },
+    })
+  }
   //if the url is /ip return the ip address
-  if (request.url.includes('/ip')) {
-    return new Response(`${ip}`, {
+  else if (request.url.includes('/ip')) {
+    return new Response(`${ip}\n`, {
       headers: { 'content-type': 'text/plain' },
     })
   }
   //if the url is /isp return the isp
-  else if (request.url.includes('/isp') || request.url.includes('/org')) {
+  else if (request.url.includes('/isp')) {
     const data = await getISP(ip)
-    return new Response(`${data.isp}`, {
+    return new Response(`${data.isp}\n`, {
       headers: { 'content-type': 'text/plain' },
     })
   }
@@ -78,6 +92,8 @@ async function handleRequest(request) {
       <ul>
         <li><a href="/ip">/ip</a></li>
         <li><a href="/isp">/isp</a></li>
+        <li><a href="/json">/json</a></li>
+        <li><a href="/ip_and_isp">/ip_and_isp</a></li>
       </ul>
     </body>
     </html>`, {
